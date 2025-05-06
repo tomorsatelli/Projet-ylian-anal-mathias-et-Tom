@@ -17,6 +17,7 @@ class Client:
         print(f"connecté à {host} sur le port {port}")
         rep = self.sock.recv(2048)
         print("reçu ",rep)
+        self.sock.sendall("ok".encode('utf-8'))
         e = int(rep.decode('utf-8'))
         rep = self.sock.recv(2048)
         print("reçu ",rep)
@@ -25,11 +26,13 @@ class Client:
         print(n)
         pub = rsa.PublicKey(n, e)
         clef_codee = rsa.encrypt(self.clef, pub)
+        print(clef_codee)
         self.sock.sendall(clef_codee)
         print(self.clef)
         message = self.reception()
         print(message)   #reception du serveur 'bonjour du serveur'
-        self.serv()
+        self.envoi('ok')
+        self.connection()
 
     def serv(self):    
         while True:
@@ -58,4 +61,19 @@ class Client:
         message = aes.decrypt(code)
         print(message)
         return message.decode()
+
+    def connection(self):
+        reponse = self.reception()
+        print(reponse)
+        self.envoi('Oui')
+        print(self.reception())
+        nom = input('nouveau Nom ?')
+        self.envoi(nom)
+        print(self.reception())
+        prenom = input('Quel est votre prénom ?')
+        self.envoi(prenom)
+        print(self.reception())
+        mot_de_passe = input('Choissiez un mot de passe.')
+        self.envoi(mot_de_passe)
+        
 client = Client()
