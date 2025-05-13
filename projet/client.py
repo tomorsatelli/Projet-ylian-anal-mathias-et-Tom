@@ -12,7 +12,7 @@ class Client:
         self.clef = bytes(nombres)
         self.sock = socket()
         host = "10.69.225.145"
-        port = 2013
+        port = 2014
         self.sock.connect((host, port))
         print(f"connecté à {host} sur le port {port}")
         rep = self.sock.recv(2048)
@@ -59,7 +59,6 @@ class Client:
         aes = pyaes.AESModeOfOperationCTR(self.clef)
         code = self.sock.recv(2048)
         message = aes.decrypt(code)
-        print(message)
         return message.decode()
 
     def connection(self):
@@ -75,5 +74,12 @@ class Client:
         print(self.reception())
         mot_de_passe = input('Choissiez un mot de passe.')
         self.envoi(mot_de_passe)
-        
+        montant = (input('Choisissez un montant'))
+        self.envoi(str(montant))
+    
+
 client = Client()
+
+
+
+
