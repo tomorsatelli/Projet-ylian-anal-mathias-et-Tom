@@ -46,11 +46,17 @@ class Serveur_Perroquet_Threaded:
                 print(mdp)
                 hash1 = sha256(mdp.encode('utf-8'))
                 print(hash1)
-                print(hash1.digest())
+                print(hash1.hexdigest())
                 sha = base64.standard_b64encode(hash1.digest()).decode('utf-8')
-                requete = f'INSERT INTO Utilisateurs (NOM, PRENOM, MOT_DE_PASSE) VALUES("{nom}", "{prenom}", {hash1.digest()})'
+                requete = f'INSERT INTO Utilisateurs (NOM, PRENOM, MOT_DE_PASSE) VALUES("{nom}", "{prenom}", "{hash1.hexdigest()}")'
                 print(requete)
                 cursor.execute(requete)
+                cnx.commit()
+                self.envoi("Entrez un montant", client, clef)
+                montant = self.reception(client, clef)
+                requete2 = f'UPDATE Utilisateurs SET PORTEMONNAIE={int(montant)} where NOM = "{nom}"'
+                print(requete2)
+                cursor.execute(requete2)
                 cnx.commit()
                 resultat = cursor.fetchall()
                 print(resultat)
